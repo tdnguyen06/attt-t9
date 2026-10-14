@@ -4,17 +4,18 @@ import { toastEmitter } from '../services/api';
 export default function Header({ isCollapsed, setIsCollapsed, activeTab }) {
   const getTabTitle = () => {
     switch (activeTab) {
-      case 'dashboard': return { title: 'Bảng Giám Sát An Toàn Thông Tin', sub: 'Theo dõi lưu lượng truy cập và cảnh báo an ninh thời gian thực' };
-      case 'assessments': return { title: 'Quản Lý Đánh Giá An Ninh & Quét Lỗ Hổng', sub: 'Danh sách và trạng thái các cuộc đánh giá mục tiêu Web / Server' };
-      case 'create-assessment': return { title: 'Khởi Tạo Cuộc Đánh Giá An Ninh Mới', sub: 'Cấu hình mục tiêu, phạm vi quét và kích hoạt công cụ phân tích' };
-      case 'users': return { title: 'Quản Lý Người Dùng & Phân Quyền', sub: 'Kiểm soát tài khoản, vai trò và quyền hạn truy cập (RBAC)' };
-      case 'logs': return { title: 'Nhật Ký Kiểm Toán & Sự Cố An Ninh', sub: 'Ghi nhận và phân tích lịch sử các cuộc gọi API' };
-      case 'security': return { title: 'Chính Sách & Tham Số Bảo Mật', sub: 'Cấu hình thời hạn JWT, quy tắc tường lửa và bảo vệ tài nguyên' };
-      default: return { title: 'Hệ Thống ATTT', sub: 'Dashboard' };
+      case 'assessments': return 'Đánh Giá & Kiểm Thử';
+      case 'mitre': return 'Khung MITRE ATT&CK';
+      case 'bloodhound': return 'Active Directory Audit';
+      case 'create-assessment': return 'Tạo Đợt Đánh Giá';
+      case 'chatbot': return 'Trợ Lý AI';
+      case 'logs': return 'Nhật Ký Kiểm Toán';
+      case 'security': return 'Chính Sách & Cấu Hình';
+      default: return 'Đánh Giá & Kiểm Thử';
     }
   };
 
-  const { title, sub } = getTabTitle();
+  const title = getTabTitle();
 
   return (
     <header className="header">
@@ -22,20 +23,19 @@ export default function Header({ isCollapsed, setIsCollapsed, activeTab }) {
         <button 
           className="toggle-btn" 
           onClick={() => setIsCollapsed(!isCollapsed)}
-          title="Thu gọn / Mở rộng Sidebar"
+          title="Thu gọn / Mở rộng Menu"
         >
           <i className={`fa-solid ${isCollapsed ? 'fa-indent' : 'fa-outdent'}`}></i>
         </button>
         <div className="page-breadcrumb">
           <div className="page-title">{title}</div>
-          <div className="page-subtitle">{sub}</div>
         </div>
       </div>
 
       <div className="header-right">
-        <div className="status-pill" title="Hệ thống Axios Interceptor đang hoạt động">
+        <div className="status-pill" title="Hệ thống giám sát đang hoạt động ổn định">
           <div className="pulse-dot"></div>
-          <span>Axios Interceptor Active</span>
+          <span>Hệ Thống: Trực Tuyến</span>
         </div>
 
         <button 

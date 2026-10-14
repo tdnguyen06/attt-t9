@@ -3,17 +3,22 @@ services:
     image: postgres:17
     container_name: security-postgres
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: attt
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-
     ports:
-      - "5432:5432"
-
+      - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - attt-net
+
+
+
+networks:
+  attt-net:
+    driver: bridge
 
 volumes:
   postgres_data:

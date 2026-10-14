@@ -37,7 +37,7 @@ export const authStorage = {
 // 3. Khởi tạo Axios Instance chính của hệ thống
 export const apiClient = axios.create({
   baseURL: 'http://localhost:8080/api',
-  timeout: 15000,
+  timeout: 120000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -71,11 +71,31 @@ apiClient.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       const data = error.response.data;
-      const message = data?.message || data?.error || 'Đã xảy ra lỗi khi xử lý yêu cầu.';
+      let rawMsg = data?.message || data?.error || 'Đã xảy ra lỗi khi xử lý yêu cầu.';
+
+      // Chuyển đổi các mã lỗi kỹ thuật phức tạp của Active Directory / Windows sang tiếng Việt thân thiện
+      let message = rawMsg;
+      if (typeof rawMsg === 'string') {
+        if (rawMsg.includes('data 52e')) {
+          message = 'Sai tên đăng nhập hoặc mật khẩu Active Directory (Lỗi Windows: data 52e). Vui lòng kiểm tra lại Username và Password.';
+        } else if (rawMsg.includes('data 525')) {
+          message = 'Tài khoản không tồn tại trên hệ thống Active Directory (Lỗi Windows: data 525).';
+        } else if (rawMsg.includes('data 532')) {
+          message = 'Mật khẩu tài khoản Active Directory đã hết hạn (Lỗi Windows: data 532).';
+        } else if (rawMsg.includes('data 533')) {
+          message = 'Tài khoản Active Directory đang bị vô hiệu hóa (Disabled - Lỗi Windows: data 533).';
+        } else if (rawMsg.includes('data 775')) {
+          message = 'Tài khoản Active Directory đã bị khóa do nhập sai mật khẩu nhiều lần (Lỗi Windows: data 775).';
+        } else if (rawMsg.includes('Transport encryption required')) {
+          message = 'Máy chủ Active Directory yêu cầu mã hóa kết nối. Hãy tích chọn "Sử dụng mã hóa LDAPS" cổng 636.';
+        } else if (rawMsg.length > 200) {
+          message = rawMsg.substring(0, 197) + '...';
+        }
+      }
 
       switch (status) {
         case 400:
-          toastEmitter.show('400 - Dữ liệu không hợp lệ', message, 'warning');
+          toastEmitter.show('400 - Xác thực không thành công', message, 'warning');
           break;
 
         case 401:
@@ -88,7 +108,10 @@ apiClient.interceptors.response.use(
           break;
 
         case 404:
-          toastEmitter.show('404 - Không tìm thấy', message || 'Tài nguyên yêu cầu không tồn tại trên máy chủ.', 'warning');
+          // Không hiện toast phiền toái đối với các truy vấn GET kiểm tra dữ liệu chưa khởi tạo
+          if (error.config?.method?.toLowerCase() !== 'get') {
+            toastEmitter.show('404 - Không tìm thấy', message || 'Tài nguyên yêu cầu không tồn tại trên máy chủ.', 'warning');
+          }
           break;
 
         case 422:
@@ -96,7 +119,7 @@ apiClient.interceptors.response.use(
           break;
 
         case 500:
-          toastEmitter.show('500 - Lỗi máy chủ', 'Hệ thống máy chủ gặp sự cố nội bộ. Vui lòng thử lại sau.', 'error');
+          toastEmitter.show('500 - Lỗi máy chủ', message || 'Hệ thống máy chủ gặp sự cố nội bộ. Vui lòng thử lại sau.', 'error');
           break;
 
         case 502:
@@ -109,6 +132,13 @@ apiClient.interceptors.response.use(
           toastEmitter.show(`Lỗi ${status}`, message, 'error');
           break;
       }
+    } else if (error.code === 'ECONNABORTED' || error.message?.toLowerCase().includes('timeout')) {
+      toastEmitter.show(
+        'Đang xử lý ngầm (Timeout)',
+        'Tiến trình AI / Quét Nmap đang xử lý ngầm trên máy chủ. Kết quả sẽ hiển thị ngay khi hoàn tất.',
+        'info',
+        6000
+      );
     } else if (error.request) {
       toastEmitter.show(
         'Mất kết nối máy chủ',

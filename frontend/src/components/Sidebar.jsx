@@ -11,12 +11,12 @@ export default function Sidebar({ isCollapsed, activeTab, setActiveTab }) {
   }, []);
 
   const menuItems = [
-    { id: 'dashboard', title: 'Tổng Quan Hệ Thống', icon: 'fa-solid fa-chart-line', category: 'GIÁM SÁT' },
-    { id: 'assessments', title: 'Danh Sách Assessment', icon: 'fa-solid fa-shield-virus', badge: 'Core', category: 'ĐÁNH GIÁ AN NINH' },
-    { id: 'create-assessment', title: 'Tạo Assessment Mới', icon: 'fa-solid fa-plus-circle', category: 'ĐÁNH GIÁ AN NINH' },
-    { id: 'users', title: 'Quản Lý Người Dùng', icon: 'fa-solid fa-users-gear', category: 'QUẢN TRỊ' },
-    { id: 'logs', title: 'Nhật Ký Bảo Mật', icon: 'fa-solid fa-shield-halved', badge: 'Live', category: 'GIÁM SÁT' },
-    { id: 'security', title: 'Chính Sách & Cấu Hình', icon: 'fa-solid fa-sliders', category: 'HỆ THỐNG' },
+    { id: 'assessments', title: 'Đánh Giá & Kiểm Thử', icon: 'fa-solid fa-shield-halved', category: 'KIỂM THỬ' },
+    { id: 'mitre', title: 'MITRE ATT&CK', icon: 'fa-solid fa-cubes-stacked', category: 'KIỂM THỬ' },
+    { id: 'bloodhound', title: 'Active Directory', icon: 'fa-solid fa-network-wired', category: 'KIỂM THỬ' },
+    { id: 'chatbot', title: 'Trợ Lý AI', icon: 'fa-solid fa-wand-magic-sparkles', category: 'TRỢ LÝ' },
+    { id: 'logs', title: 'Nhật Ký', icon: 'fa-solid fa-clipboard-list', category: 'HỆ THỐNG' },
+    { id: 'security', title: 'Cấu Hình', icon: 'fa-solid fa-sliders', category: 'HỆ THỐNG' },
   ];
 
   let currentCategory = null;
@@ -27,14 +27,13 @@ export default function Sidebar({ isCollapsed, activeTab, setActiveTab }) {
         <a 
           href="#" 
           className="brand-logo" 
-          onClick={(e) => { e.preventDefault(); setActiveTab('dashboard'); }}
+          onClick={(e) => { e.preventDefault(); setActiveTab('assessments'); }}
         >
           <div className="brand-icon">
             <i className="fa-solid fa-shield-virus"></i>
           </div>
           <div className="brand-text">
             ATTT PORTAL
-            <span>Trung tâm giám sát an ninh</span>
           </div>
         </a>
       </div>
@@ -63,11 +62,11 @@ export default function Sidebar({ isCollapsed, activeTab, setActiveTab }) {
 
       <div className="sidebar-footer">
         <div className="user-avatar-sm">
-          <i className="fa-solid fa-user-shield"></i>
+          <i className="fa-solid fa-shield-halved"></i>
         </div>
         <div className="user-info-text">
-          <div className="user-name">{user?.name || 'Chuyên viên ATTT'}</div>
-          <div className="user-role">{user?.role || 'ROLE_ADMIN'}</div>
+          <div className="user-name">ATTT Portal</div>
+          <div className="user-role" style={{ color: '#10b981' }}>● Sẵn sàng</div>
         </div>
       </div>
     </aside>
