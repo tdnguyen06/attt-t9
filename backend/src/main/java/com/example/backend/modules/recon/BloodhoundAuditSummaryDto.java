@@ -11,7 +11,6 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BloodhoundAuditSummaryDto {
@@ -42,4 +41,13 @@ public class BloodhoundAuditSummaryDto {
     private Boolean hasValidCredentials = true;
 
     private String aiAnalysis;
+
+    public BloodhoundAuditSummaryDto() {
+        this.highRiskFindings = new ArrayList<>();
+        this.ownedAccountAttackPaths = new ArrayList<>();
+        this.privilegedAdmins = new ArrayList<>();
+        this.kerberoastableAccounts = new ArrayList<>();
+        this.asrepRoastableAccounts = new ArrayList<>();
+        this.hasValidCredentials = true;
+    }
 }
