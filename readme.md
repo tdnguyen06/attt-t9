@@ -83,12 +83,14 @@ async function fetchUsers() {
 
 ## 🚀 Cách Chạy Ứng Dụng
 
-### 1. Frontend (React + Vite):
+### 1. Khởi Chạy Cơ Sở Dữ Liệu & Các Mục Tiêu Kiểm Thử (Docker Compose):
 ```powershell
-cd frontend
-npm run dev
+docker compose up -d
 ```
-Trình duyệt sẽ mở tại: `http://localhost:3000` (hoặc `http://localhost:5173`).
+Lệnh này sẽ tự động khởi động:
+- **PostgreSQL 17** (`security-postgres`): Cổng `15432:5432`
+- **Apache Web Server Test Target** (`security-target-apache`): Cổng `8088:80` (Mục tiêu rà quét HTTP, Header, Tech Stack, `/backup.zip`)
+- **Apache Tomcat Test Target** (`security-target-tomcat`): Cổng `8888:8080`, AJP `8009` (Mục tiêu rà quét Tomcat CVEs, Ghostcat, Java Web)
 
 ### 2. Backend (Spring Boot):
 ```powershell
@@ -96,3 +98,12 @@ cd backend
 .\mvnw.cmd spring-boot:run
 ```
 Backend chạy tại: `http://localhost:8080`.
+
+### 3. Frontend (React + Vite):
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+Trình duyệt sẽ mở tại: `http://localhost:3000` (hoặc `http://localhost:5173`).
+

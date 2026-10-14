@@ -14,7 +14,35 @@ services:
     networks:
       - attt-net
 
+  # ========================================================
+  # Môi trường Lab rà quét thử nghiệm (Test Targets)
+  # ========================================================
 
+  # Target 1: Máy chủ Web Apache HTTP Server (Cổng 8088 -> 80)
+  target-apache:
+    image: httpd:2.4-alpine
+    container_name: security-target-apache
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    volumes:
+      - ./labs/target-apache/htdocs:/usr/local/apache2/htdocs
+    networks:
+      - attt-net
+
+  # Target 2: Máy chủ ứng dụng Apache Tomcat (Cổng 8888 -> 8080, AJP 8009 -> 8009)
+  # Sử dụng cổng 8888 trên host để tránh xung đột với Spring Boot Backend (chạy cổng 8080)
+  target-tomcat:
+    image: tomcat:9.0-jdk11-openjdk-slim
+    container_name: security-target-tomcat
+    restart: unless-stopped
+    ports:
+      - "8888:8080"
+      - "8009:8009"
+    volumes:
+      - ./labs/target-tomcat/webapps:/usr/local/tomcat/webapps
+    networks:
+      - attt-net
 
 networks:
   attt-net:

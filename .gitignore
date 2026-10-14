@@ -25,6 +25,14 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# Vite & Frontend build cache
+.vite/
+*/.vite/
+
+# Binary & Executables
+*.exe
+labs/*.exe
+
 # IDE & Editor configs
 .vscode/*
 !.vscode/extensions.json
